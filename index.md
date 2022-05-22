@@ -1,37 +1,25 @@
-## Welcome to GitHub Pages
+# Gost加密隧道中转方案搭建及原理讲解
 
-You can use the [editor on GitHub](https://github.com/diausek/xsdnmg-h/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+## GOST加密隧道介绍：
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+GOST是一款用GO语言实现的安全隧道软件，gost安全隧道使用的是 http+tls 的协议，将流量加密成普通网页的流量进行访问，让流量特征监控失效。
 
-### Markdown
+Gost 隧道需要两端，即服务端与客户端才能组成一条加密隧道， 所以需要一台境外服务器做服务端，同时在你的本地也需要一台客户端（可以是矿机本身，也可以是任意一台能运行 Gost 的机器，包括Docker容器）服务端和客户端互相加密通讯，就能够组成一条加密隧道。
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+GOST TCP加密隧道设置：
 
-```markdown
-Syntax highlighted code block
+gost-windows-amd64.exe -L=tcp://:12345/eth.f2pool.com:6688 -F=relay+tls://zhangsan:abcd1234@服务端IP:36543
+以上转发地址，从服务器转发到鱼池的TCP端口，软件设置stratum+TCP。
 
-# Header 1
-## Header 2
-### Header 3
+GOST SSL加密隧道设置：
 
-- Bulleted
-- List
+gost-windows-amd64.exe -L=tcp://:12345/ethssl-asia.f2pool.com:6698 -F=relay+tls://zhangsan:abcd1234@服务端IP:36543
+以上转发地址，从服务器转发到鱼池的SSL端口，软件设置stratum+SSL。
 
-1. Numbered
-2. List
+**详细的Gost加密隧道挖矿中转方案搭建教程请点击
+[Gost加密隧道中转方案](https://www.xsdnmg.tk/2022/04/06/03/).**
 
-**Bold** and _Italic_ and `Code` text
+**温馨提示：**
+Gost内置的TLS证书，已经具备相当高的安全性，目前网络上也有一些Gost加密中转教程中使用SSL自定义证书，声称使用SSL自定义证书更加安全，确实使用自定义的SSL证书具有唯一性，不会存在证书共用的情况，我花了1周时间研究Gost自定义SSL证书的配置方法，没有成功，初步验证Gost隧道加密中转使用自定义SSL证书的方案无法实现，建议大家不要花太多时间去研究。如果担心Gost内置的TLS证书共用不安全，建议每周或者每月重新运行服务器端gost程序，每次重新运行都会更新内置TLS证书。
 
-[Link](url) and ![Image](src)
-```
-
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/diausek/xsdnmg-h/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+Gost V3正式版本即将发布，待发布后会更新文档，同时增加如何使用Grafana来呈现Gost监控指标数据，以实现服务运行和wa kuang数据的可视化展示。
